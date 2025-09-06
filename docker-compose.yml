@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+    app:
+        image: 'effmo_laravel_app:latest'
+        container_name: effmo_laravel_app
+        build:
+            context: .
+            dockerfile: data/docker/Dockerfile
+        restart: unless-stopped
+        user: app
+        working_dir: /app
+        ports:
+            - '8081:8000'
+        volumes:
+            - ./:/app
+            - vendor:/app/vendor
+        networks:
+            - effmo_network
+        depends_on:
+            - db
+
+    db:
+        image: 'mysql'
+        container_name: effmo_mysql_db
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: '${DB_DATABASE:-todo}'
+            MYSQL_USER: '${DB_USERNAME:-user}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD}'
+        ports:
+            - '8082:3306'
+        volumes:
+            - effmo_db:/var/lib/mysql
+        networks:
+            - effmo_network
+
+volumes:
+    effmo_db:
+    vendor:
+
+networks:
+    effmo_network:
+        driver: bridge
