@@ -37,7 +37,7 @@ WORKDIR /app
 COPY . .
 
 # Устанавливаем зависимости
-RUN composer install --optimize-autoloader \
+RUN composer install \
     && npm install \
     && npm run build || true
 

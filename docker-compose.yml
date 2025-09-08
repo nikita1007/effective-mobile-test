@@ -13,7 +13,7 @@ services:
         ports:
             - '8081:8000'
         volumes:
-            - ./:/app
+            - ./:/app:cached
             - vendor:/app/vendor
         networks:
             - effmo_network
