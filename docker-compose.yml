@@ -28,7 +28,7 @@ services:
             MYSQL_DATABASE: '${DB_DATABASE:-todo}'
             MYSQL_USER: '${DB_USERNAME:-user}'
             MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD}'
+            MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD:-root}'
         ports:
             - '8082:3306'
         volumes:
