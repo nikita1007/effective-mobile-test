@@ -29,18 +29,22 @@ class ApiAuthMiddleware
             ], Response::HTTP_UNAUTHORIZED);
         }
 
-        // Проверяем валидность токена и пользователя
-        $user_id = $this->jwt_decode($token)['user_id'];
+        try {
+            // Проверяем валидность токена и пользователя
+            $user_id = $this->jwt_decode($token)['user_id'];
 
-        if (User::find($user_id)->doesntExist()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Unauthorized'
-            ], Response::HTTP_UNAUTHORIZED);
+            if (User::find($user_id)->doesntExist()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthorized'
+                ], Response::HTTP_UNAUTHORIZED);
+            }
+
+            $request->attributes->add(['user_id' => $user_id]);
+
+            return $next($request);
+        } catch (\Exception $exception) {
+            return response()->json(['status' => false, 'message' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        $request->attributes->add(['user_id' => $user_id]);
-
-        return $next($request);
     }
 }
